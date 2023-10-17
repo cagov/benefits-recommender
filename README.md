@@ -93,4 +93,4 @@ To make changes here, to the widget itself, run the following command to start a
 npm run serve
 ```
 
-Then view the <a href="http://127.0.0.1:8080/preview/local.html">local test page URL</a>.
+Then view the <a href="http://localhost:8080/preview/local.html">local test page URL</a>.
