@@ -1,0 +1,19 @@
+body {
+  margin: 0;
+}
+
+main {
+  margin: 0.5rem;
+}
+
+hgroup {
+  border: dimgray solid 3px;
+  padding: 1rem 2rem;
+  background: repeating-linear-gradient(
+    135deg,
+    whitesmoke,
+    whitesmoke 3rem,
+    white 3rem,
+    white 6rem
+  );
+}

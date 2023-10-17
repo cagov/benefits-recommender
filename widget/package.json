@@ -1,0 +1,17 @@
+{
+  "name": "@cagov/benefits-recommender-widget",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "esbuild src/cagov-benefits-recs.js --bundle --outfile=dist/cagov-benefits-recs.js --format=esm",
+    "build:preview": "node preview/generate.js",
+    "serve": "node -e 'require(\"./serve/widget-server\")()'"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.19.4",
+    "express": "^4.18.2"
+  }
+}

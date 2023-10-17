@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <title>Benefits Recommender Preview</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script type="module" src="env-picker.js"></script>
+    <link rel="stylesheet" href="preview.css" />
+  </head>
+  <body>
+    <main>
+      <hgroup>
+        <h1>Benefits Recommender Preview</h1>
+        <p>Widget: local</p>
+        <env-picker></env-picker>
+      </hgroup>
+
+      <p>Here's some test content.</p>
+      <p>The widget follows.</p>
+
+      <div id="widget-box">
+        <cagov-benefits-recs
+          host="https://sdio.edd.ca.gov/DIAE/Pages/ExternalUser/InitialClaim/Confirmation.aspx"
+          endpoint="http://localhost:3333"
+        ></cagov-benefits-recs>
+      </div>
+
+      <script
+        type="module"
+        async
+        defer
+        src="../src/cagov-benefits-recs.js"
+      ></script>
+
+      <p>Site content runs below the widget too.</p>
+
+      <!--
+        ** Endpoint **
+
+        Add an "endpoint" attribute to the custom element to test different API environments.
+
+        dev (local):
+        endpoint="http://localhost:3333"
+
+        staging:
+        endpoint="https://staging.br.api.innovation.ca.gov"
+
+        production (default):
+        endpoint="https://br.api.innovation.ca.gov"
+
+        ** Host **
+
+        Add a "host" attribute to spoof the widget's placement page. "host" should be a full URL.
+        Defaults to the current page of the widget (window.location.href).
+
+        host="https://sdio.edd.ca.gov/DIAE/Pages/ExternalUser/InitialClaim/Confirmation.aspx"
+      -->
+    </main>
+  </body>
+</html>
