@@ -8,7 +8,7 @@ module.exports = {
     {
       name: "CALFRESH",
       day: new Date().toISOString().split("T")[0].toString(),
-      hits: 5008,
+      hits: 5009,
     },
   ],
 };
