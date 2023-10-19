@@ -25,5 +25,8 @@
   },
   "workspaces": [
     "widget"
-  ]
+  ],
+  "volta": {
+    "node": "18.17.0"
+  }
 }

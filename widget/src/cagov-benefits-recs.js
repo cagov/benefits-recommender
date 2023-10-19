@@ -1,30 +1,19 @@
-import { css, rootHtml, linkHtml } from "./templates.js";
-
 export class CaGovBenefitsRecs extends window.HTMLElement {
   constructor() {
     super();
   }
 
   connectedCallback() {
-    this.endpoint = (
-      this.hasAttribute("endpoint")
-        ? this.getAttribute("endpoint")
-        : "https://br.api.innovation.ca.gov"
-    ).replace(/\/$/, "");
+    const defaultEndpoint = "https://br.api.innovation.ca.gov";
+    this.endpoint = this.getAttribute("endpoint") || defaultEndpoint;
 
-    this.language = this.hasAttribute("language")
-      ? this.getAttribute("language")
-      : document.querySelector("html").getAttribute("lang");
+    const lang = document.querySelector("html").getAttribute("lang");
+    this.language = this.getAttribute("language") || lang;
 
-    this.income = this.hasAttribute("income")
-      ? this.getAttribute("income")
-      : "";
+    this.income = this.getAttribute("income");
+    this.host = this.getAttribute("host") || window.location.href;
 
-    this.host = this.hasAttribute("host")
-      ? this.getAttribute("host")
-      : window.location.href;
-
-    const benefitsUrl = new URL(`${this.endpoint}/benefits`);
+    const benefitsUrl = new URL("/benefits", this.endpoint);
 
     // We'll append the query parameters to the URL of our API call.
     const queryKeys = ["host", "language"];
@@ -35,51 +24,30 @@ export class CaGovBenefitsRecs extends window.HTMLElement {
     // Retrieve set of benefits links from API.
     fetch(benefitsUrl.href, {
       headers: {
-        "Content-Type": "application/json",
+        Accept: "text/html",
       },
     })
+      .then(async (response) => {
+        const html = await response.text();
+
+        // Only render the widget if we actually get valid links.
+        if (html && response.ok) {
+          this.attachShadow({ mode: "open" });
+          this.shadowRoot.innerHTML = html;
+          const section = this.shadowRoot.querySelector("section");
+
+          this.experimentName = section.dataset.experimentName;
+          this.experimentVariation = section.dataset.experimentVariation;
+
+          this.recordEvent("render");
+          this.applyListeners();
+        }
+      })
       .catch((error) => {
         throw new Error(
           `Benefits Recommendation API unavailable. Hiding widget.`,
           { cause: error }
         );
-      })
-      .then((response) => response.json())
-      .then((json) => JSON.parse(json))
-      .then((data) => {
-        // Only render the widget if we actually get valid links.
-        if (data.links && data.links.length > 1) {
-          const template = document.createElement("template");
-          template.innerHTML = rootHtml;
-
-          const style = document.createElement("style");
-          style.textContent = css;
-
-          template.content.prepend(style);
-
-          this.attachShadow({ mode: "open" });
-          this.shadowRoot.append(template.content.cloneNode(true));
-
-          this.shadowRoot.querySelector("h2").innerHTML = data.header;
-          this.shadowRoot.querySelector("p.tagline").innerHTML = data.tagline;
-          let listContainer = this.shadowRoot.querySelector("ul.link-list");
-          data.links.forEach((link) => {
-            listContainer.innerHTML += linkHtml(link);
-          });
-
-          this.experimentName = data.experimentName;
-          this.experimentVariation = data.experimentVariation;
-
-          this.recordEvent("render");
-          this.applyListeners();
-        } else {
-          console.log(
-            "No links received by Benefits Recommendation API. Hiding widget."
-          );
-        }
-      })
-      .catch((error) => {
-        console.log(error);
       });
   }
 
@@ -94,8 +62,9 @@ export class CaGovBenefitsRecs extends window.HTMLElement {
     };
 
     const data = Object.assign({ event }, defaults, details);
+    const eventUrl = new URL("/event", this.endpoint);
 
-    navigator.sendBeacon(`${this.endpoint}/event`, JSON.stringify(data));
+    navigator.sendBeacon(eventUrl.href, JSON.stringify(data));
   }
 
   applyListeners() {

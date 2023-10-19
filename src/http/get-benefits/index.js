@@ -2,6 +2,7 @@ const arc = require("@architect/functions");
 const { assembleLinks } = require("@architect/shared/links");
 const { applyRules } = require("@architect/shared/rules");
 const { getDefinitions } = require("@architect/shared/s3");
+const { generateHtml } = require("@architect/shared/templates");
 
 // Definitions will be loaded from benefits-recs-defs.json in S3.
 // We keep it outside the handler to cache it between Lambda runs.
@@ -14,14 +15,23 @@ exports.handler = arc.http.async(async (req) => {
     definitions = await getDefinitions();
   }
 
-  // Grab data from URL query parameters.
+  // Grab data from headers and URL query parameters.
   const host = decodeURIComponent(req.query.host || "");
   const language = req.query.language || "en";
+  const acceptHeader = req.headers?.accept;
 
+  // Process target links.
   const allLinks = assembleLinks(definitions, language, host);
-  console.log("All:" + allLinks.length);
   const links = await applyRules(definitions, allLinks, host);
-  console.log("Filtered:" + links.length);
+
+  // If we don't have any links, exit now with no content.
+  if (links.length === 0) {
+    return {
+      cors: true,
+      statusCode: 204,
+    };
+  }
+
   const data = {
     header: "Apply for more benefits!",
     tagline: "You might be able to get:",
@@ -30,6 +40,15 @@ exports.handler = arc.http.async(async (req) => {
     links,
   };
 
+  // If the client wants HTML, send it.
+  if (acceptHeader === "text/html") {
+    return {
+      cors: true,
+      html: generateHtml(data),
+    };
+  }
+
+  // Otherwise, default to JSON.
   return {
     cors: true,
     json: JSON.stringify(data),
