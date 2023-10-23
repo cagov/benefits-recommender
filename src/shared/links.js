@@ -48,11 +48,22 @@ const addAnalytics = (linkUrl, analytics, hostDef) => {
 };
 
 /**
+ * @typedef TargetLink
+ * @type {object}
+ * @property {string} id
+ * @property {string} language
+ * @property {string} lead
+ * @property {string} catalyst
+ * @property {string} url
+ * @property {string} graphic
+ */
+
+/**
  * Construct link objects for the given language and host.
- * @param {object} definitions
+ * @param {import('./s3.js').Definitions} definitions
  * @param {string} language
  * @param {string} host
- * @returns
+ * @returns {TargetLink[]}
  */
 exports.assembleLinks = (definitions, language, host) => {
   const { targets, hosts: hostDefs } = definitions;
@@ -76,9 +87,6 @@ exports.assembleLinks = (definitions, language, host) => {
     const catalyst =
       translations[langKey]?.catalyst || translations.en.catalyst || "";
 
-    const description =
-      translations[langKey]?.description || translations.en.description || "";
-
     const linkUrl = translations[langKey]?.url || translations.en.url || "";
 
     const analytics =
@@ -87,11 +95,8 @@ exports.assembleLinks = (definitions, language, host) => {
     const urlWithAnalytics = addAnalytics(linkUrl, analytics, hostDef);
 
     return {
-      linktext: lead, // linktext depreciated
-      program: catalyst, // program depreciated
       lead,
       catalyst,
-      description, // description possibly depreciated
       url: urlWithAnalytics,
       graphic,
       language: langKey,

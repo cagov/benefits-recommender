@@ -1,3 +1,6 @@
+const url = require("./url");
+const { getThrottles } = require("./throttles");
+
 /**
  * rules.js
  * Welcome to rules.
@@ -8,10 +11,19 @@
  * Rules are processed in a specific order.
  */
 
-const url = require("./url");
-const { getThrottles } = require("./throttles");
+/**
+ * @callback Rule
+ * @param {import('./links.js').TargetLink[]} links
+ * @param {object} params
+ * @param {string} [params.host]
+ * @param {import('./s3.js').Throttle[]} [params.throttles]
+ * @returns {import('./links.js').TargetLink[]}
+ */
 
-/** Remove links that have exceeded daily throttles. */
+/**
+ * Remove links that have exceeded daily throttles.
+ * @type {Rule}
+ */
 const removeThrottledLinks = (links, { throttles }) =>
   links.filter((link) => {
     const blockingThrottles = throttles.filter(
@@ -22,21 +34,33 @@ const removeThrottledLinks = (links, { throttles }) =>
     return blockingThrottles.length < 1;
   });
 
-/** Remove links that point back to the same host site as the widget. */
+/**
+ * Remove links that point back to the same host site as the widget.
+ * @type {Rule}
+ */
 const removeLinkBacks = (links, { host }) =>
   links.filter((link) => !url.matchHosts(host, link.url));
 
-/** Randomize the order of the links. */
+/**
+ * Randomize the order of the links.
+ * @type {Rule}
+ */
 const randomizeOrder = (links) =>
   links
     .map((link) => ({ link, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ link }) => link);
 
-/** Reduce the list of links to just the top three. */
+/**
+ * Reduce the list of links to just the top three.
+ * @type {Rule}
+ */
 const pickTopThree = (links) => links.slice(0, 3);
 
-/** Active rules, in order. */
+/**
+ * Active rules, in order.
+ * @type {Rule[]}
+ */
 const rules = [
   removeThrottledLinks,
   removeLinkBacks,
@@ -44,7 +68,13 @@ const rules = [
   pickTopThree,
 ];
 
-/** Apply the rules to the list of links. */
+/**
+ * Apply the rules to the list of links.
+ * @param {import('./s3.js').Definitions} definitions
+ * @param {import('./links.js').TargetLink[]} allLinks
+ * @param {string} host
+ * @returns {Promise<import('./links.js').TargetLink[]>}
+ */
 const applyRules = async (definitions, allLinks, host) => {
   const throttles = await getThrottles(definitions);
 

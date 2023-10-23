@@ -1,6 +1,10 @@
 const arc = require("@architect/functions");
 
-/** Retrieve throttles. */
+/**
+ * Retrieve throttles.
+ * @param {import('./s3.js').Definitions} definitions
+ * @returns {Promise<import('./s3.js').Throttle[]>}
+ */
 exports.getThrottles = async (definitions) => {
   const { throttles: throttleDefs } = definitions;
 
