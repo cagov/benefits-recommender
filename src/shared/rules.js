@@ -1,3 +1,6 @@
+const url = require("./url");
+const { getThrottles } = require("./throttles");
+
 /**
  * rules.js
  * Welcome to rules.
@@ -8,10 +11,23 @@
  * Rules are processed in a specific order.
  */
 
-const url = require("./url");
-const { getThrottles } = require("./throttles");
+/**
+ * @callback Rule
+ * @param {import('./links.js').TargetLink[]} links
+ * A processed list of all target links in the user's requested language.
+ * @param {object} params
+ * A collection of parameters from the request to help inform the rule.
+ * @param {string} [params.host]
+ * The host page, as a URL (string), from which the widget sent this request.
+ * @param {import('./s3.js').Throttle[]} [params.throttles]
+ * A processed list of target link throttles.
+ * @returns {import('./links.js').TargetLink[]}
+ */
 
-/** Remove links that have exceeded daily throttles. */
+/**
+ * Remove links that have exceeded daily throttles.
+ * @type {Rule}
+ */
 const removeThrottledLinks = (links, { throttles }) =>
   links.filter((link) => {
     const blockingThrottles = throttles.filter(
@@ -22,21 +38,33 @@ const removeThrottledLinks = (links, { throttles }) =>
     return blockingThrottles.length < 1;
   });
 
-/** Remove links that point back to the same host site as the widget. */
+/**
+ * Remove links that point back to the same host site as the widget.
+ * @type {Rule}
+ */
 const removeLinkBacks = (links, { host }) =>
   links.filter((link) => !url.matchHosts(host, link.url));
 
-/** Randomize the order of the links. */
+/**
+ * Randomize the order of the links.
+ * @type {Rule}
+ */
 const randomizeOrder = (links) =>
   links
     .map((link) => ({ link, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ link }) => link);
 
-/** Reduce the list of links to just the top three. */
+/**
+ * Reduce the list of links to just the top three.
+ * @type {Rule}
+ */
 const pickTopThree = (links) => links.slice(0, 3);
 
-/** Active rules, in order. */
+/**
+ * Active rules, in order.
+ * @type {Rule[]}
+ */
 const rules = [
   removeThrottledLinks,
   removeLinkBacks,
@@ -44,7 +72,17 @@ const rules = [
   pickTopThree,
 ];
 
-/** Apply the rules to the list of links. */
+/**
+ * Apply the rules to the given list of links.
+ * @param {import('./s3.js').Definitions} definitions
+ * A parsed object representing the Airtable-derived `benefits-recs-defs.json` file.
+ * @param {import('./links.js').TargetLink[]} allLinks
+ * A processed list of all target links in the user's requested language.
+ * @param {string} host
+ * The host page, as a URL (string), from which the widget sent this request.
+ * @returns {Promise<import('./links.js').TargetLink[]>}
+ * A targetted list of target links.
+ */
 const applyRules = async (definitions, allLinks, host) => {
   const throttles = await getThrottles(definitions);
 

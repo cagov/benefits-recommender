@@ -5,6 +5,7 @@ const { getDefinitions } = require("@architect/shared/s3");
 
 // Definitions will be loaded from benefits-recs-defs.json in S3.
 // We keep it outside the handler to cache it between Lambda runs.
+/** @type {import('./node_modules/@architect/shared/s3.js').Definitions} */
 let definitions = {};
 
 /** Core function for get-benefits. */
@@ -19,9 +20,7 @@ exports.handler = arc.http.async(async (req) => {
   const language = req.query.language || "en";
 
   const allLinks = assembleLinks(definitions, language, host);
-  console.log("All:" + allLinks.length);
   const links = await applyRules(definitions, allLinks, host);
-  console.log("Filtered:" + links.length);
   const data = {
     header: "Apply for more benefits!",
     tagline: "You might be able to get:",

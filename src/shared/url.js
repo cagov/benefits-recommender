@@ -1,10 +1,10 @@
+const { URL } = require("url");
+
 /**
  * url.js
  * A collection of functions for comparing URLs.
  * We'll be doing a lot of that when targetting links to send to the widget.
  */
-
-const { URL } = require("url");
 
 /**
  * Get a URL object from a string, if possible.
@@ -60,6 +60,12 @@ const comparePaths = (pUrl1, pUrl2) => {
   return normalizePath(pUrl1) === normalizePath(pUrl2);
 };
 
+/**
+ * See if two URLs have matching hostnames and pathnames.
+ * @param {URL} pUrl1 A URL object for the first URL.
+ * @param {URL} pUrl2 A URL object for the second URL.
+ * @returns {boolean}
+ */
 const compare = (pUrl1, pUrl2) => {
   return compareHosts(pUrl1, pUrl2) && comparePaths(pUrl1, pUrl2);
 };
