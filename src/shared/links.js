@@ -8,7 +8,13 @@ const AnalyticEngines = {
 
 /**
  * Find the host definition for a given host url.
+ * We want to match up the origin of the request (host) with our own metadata (hostDefs).
  * @param {string} host
+ * The host page, as a URL (string), from which the widget sent this request.
+ * @param {import('./s3.js').Host[]} hostDefs
+ * A list of host objects from the Airtable-derived definitions.
+ * @returns {import('./s3.js').Host|undefined}
+ * A matching host definition, or undefined if none are found.
  */
 const findHostDef = (host, hostDefs) => {
   const pHostUrl = url.parse(host);
@@ -28,8 +34,13 @@ const findHostDef = (host, hostDefs) => {
 /**
  * Add query string parameters for the target site's analytics engine.
  * @param {string} linkUrl
+ * The target link's URL as string.
  * @param {string} analytics
- * @param {any} hostDef
+ * The target site's analytics engine, represented by a short code. @see AnalyticEngines
+ * @param {import('./s3.js').Host} hostDef
+ * A host object from the Airtable-derived definitions.
+ * @returns {string}
+ * A modified target link URL, including analytics query parameters if relevant.
  */
 const addAnalytics = (linkUrl, analytics, hostDef) => {
   const pUrl = url.parse(linkUrl);
@@ -51,19 +62,29 @@ const addAnalytics = (linkUrl, analytics, hostDef) => {
  * @typedef TargetLink
  * @type {object}
  * @property {string} id
+ * The id of this target link.
  * @property {string} language
+ * The language for this target link.
  * @property {string} lead
+ * The "lead text" of this target link.
  * @property {string} catalyst
+ * The "call to action" text of this target link.
  * @property {string} url
+ * The URL of this target link, as a string.
  * @property {string} graphic
+ * The SVG icon for this target link, as a string.
  */
 
 /**
  * Construct link objects for the given language and host.
  * @param {import('./s3.js').Definitions} definitions
+ * A parsed object representing the Airtable-derived `benefits-recs-defs.json` file.
  * @param {string} language
+ * The language for this request, as an ISO 639-1 code.
  * @param {string} host
+ * The host page, as a URL (string), from which the widget sent this request.
  * @returns {TargetLink[]}
+ * A processed list of target links in the requested language.
  */
 exports.assembleLinks = (definitions, language, host) => {
   const { targets, hosts: hostDefs } = definitions;
