@@ -6,6 +6,7 @@ const { generateHtml } = require("@architect/shared/templates");
 
 // Definitions will be loaded from benefits-recs-defs.json in S3.
 // We keep it outside the handler to cache it between Lambda runs.
+/** @type {import('./node_modules/@architect/shared/s3.js').Definitions} */
 let definitions = {};
 
 /** Core function for get-benefits. */
@@ -31,7 +32,7 @@ exports.handler = arc.http.async(async (req) => {
       statusCode: 204,
     };
   }
-
+  
   const data = {
     header: "Apply for more benefits!",
     tagline: "You might be able to get:",

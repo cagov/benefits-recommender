@@ -1,6 +1,15 @@
 const arc = require("@architect/functions");
 
-/** Retrieve throttles. */
+/**
+ * Based upon the Airtable-derived definitons, this function evaluates the throttles.
+ * We check DynamoDB to see if each throttle is still within daily clickthrough limits.
+ * We also look at other parameters, like start and end dates.
+ * The goal is to see which throttles need to be activated for this request.
+ * @param {import('./s3.js').Definitions} definitions
+ * A parsed object representing the Airtable-derived `benefits-recs-defs.json` file.
+ * @returns {Promise<import('./s3.js').Throttle[]>}
+ * A hydrated list of target link throttles.
+ */
 exports.getThrottles = async (definitions) => {
   const { throttles: throttleDefs } = definitions;
 
