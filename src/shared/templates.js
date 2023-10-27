@@ -183,7 +183,7 @@ const eddUiTemplate = (data) => /* html */ `
 `;
 
 exports.generateHtml = (data, hostDef) => {
-  if (hostDef.id === "edd_ui_recert") {
+  if (hostDef?.id === "edd_ui_recert") {
     return eddUiTemplate(data);
   }
 

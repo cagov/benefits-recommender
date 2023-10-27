@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 
 const generate = (props) => {
   const pr = props.prNumber
-    ? `(<a href="https://github.com/cagov/benefits-recommendation-widget-front/pull/${props.prNumber}">Pull Request #${props.prNumber}</a>)`
+    ? `(<a href="https://github.com/cagov/benefits-recommender/pull/${props.prNumber}">Pull Request #${props.prNumber}</a>)`
     : "";
 
   return /* html */ `
