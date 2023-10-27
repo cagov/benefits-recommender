@@ -13,6 +13,7 @@ let definitions = {};
 exports.handler = arc.http.async(async (req) => {
   // If definitions is empty, fetch it from S3.
   if (Object.keys(definitions).length === 0) {
+    console.log("Definitions cache is cold. Fetching definitions from S3.");
     definitions = await getDefinitions();
   }
 
@@ -32,7 +33,7 @@ exports.handler = arc.http.async(async (req) => {
       statusCode: 204,
     };
   }
-  
+
   const data = {
     header: "Apply for more benefits!",
     tagline: "You might be able to get:",
