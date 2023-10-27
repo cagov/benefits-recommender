@@ -3,6 +3,8 @@ const { assembleLinks } = require("@architect/shared/links");
 const { applyRules } = require("@architect/shared/rules");
 const { getDefinitions } = require("@architect/shared/s3");
 const { generateHtml } = require("@architect/shared/templates");
+const { matchHostDef } = require("@architect/shared/hosts");
+const { getThrottles } = require("@architect/shared/throttles");
 
 // Definitions will be loaded from benefits-recs-defs.json in S3.
 // We keep it outside the handler to cache it between Lambda runs.
@@ -17,14 +19,24 @@ exports.handler = arc.http.async(async (req) => {
     definitions = await getDefinitions();
   }
 
+  const {
+    targets: targetDefs = [],
+    hosts: hostDefs = [],
+    throttles: throttleDefs = [],
+  } = definitions;
+
   // Grab data from headers and URL query parameters.
   const host = decodeURIComponent(req.query.host || "");
   const language = req.query.language || "en";
   const acceptHeader = req.headers?.accept;
 
-  // Process target links.
-  const allLinks = assembleLinks(definitions, language, host);
-  const links = await applyRules(definitions, allLinks, host);
+  // Process metadata.
+  const hostDef = matchHostDef(host, hostDefs);
+  const throttles = await getThrottles(throttleDefs);
+
+  // Create target links.
+  const allLinks = assembleLinks(targetDefs, language, hostDef);
+  const links = await applyRules(throttles, allLinks, hostDef);
 
   // If we don't have any links, exit now with no content.
   if (links.length === 0) {
@@ -46,7 +58,7 @@ exports.handler = arc.http.async(async (req) => {
   if (acceptHeader === "text/html") {
     return {
       cors: true,
-      html: generateHtml(data),
+      html: generateHtml(data, hostDef),
     };
   }
 

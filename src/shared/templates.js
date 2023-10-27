@@ -1,4 +1,4 @@
-const css = /* css */ `
+const defaultCss = /* css */ `
 :host {
   --benefits-recs-background-color: #E1F1EE;
   --benefits-recs-highlight-color: #006C58;
@@ -132,7 +132,7 @@ const openIcon = /* html */ `
 </svg>
 `;
 
-const linkHtml = (link) => /* html */ `
+const defaultLinkHtml = (link) => /* html */ `
 <li>
   <a href="${link.url}" target="_blank" rel="noopener noreferrer">
     <span class="link-start">
@@ -147,17 +147,45 @@ const linkHtml = (link) => /* html */ `
 </li>
 `;
 
-exports.generateHtml = (data) => /* html */ `
-<style>${css}</style>
-<section 
-  aria-label="benefits recommendations"
-  data-experimentName="${data.experimentName}"
-  data-experimentVariation="${data.experimentVariation}"
->
-  <h2>${data.header}</h2>
-  <p class="tagline">${data.tagline}</p>
-  <ul class="link-list">
-    ${data.links.map((link) => linkHtml(link)).join("\n")}
-  </ul>
-</section>
+const defaultHtml = (data) => {
+  const linkList = data.links.map((link) => defaultLinkHtml(link)).join("\n");
+
+  return /* html */ `
+    <section 
+      aria-label="benefits recommendations"
+      data-experimentName="${data.experimentName}"
+      data-experimentVariation="${data.experimentVariation}"
+    >
+      <h2>${data.header}</h2>
+      <p class="tagline">${data.tagline}</p>
+      <ul class="link-list">
+        ${linkList}
+      </ul>
+    </section>
+  `;
+};
+
+const defaultTemplate = (data) => /* html */ `
+  <style>
+    ${defaultCss}
+  </style>
+  ${defaultHtml(data)}
 `;
+
+const eddUiTemplate = (data) => /* html */ `
+  <style>
+    ${defaultCss}
+    section {
+      margin: 3rem 0;
+    }
+  </style>
+  ${defaultHtml(data)}
+`;
+
+exports.generateHtml = (data, hostDef) => {
+  if (hostDef.id === "edd_ui_recert") {
+    return eddUiTemplate(data);
+  }
+
+  return defaultTemplate(data);
+};

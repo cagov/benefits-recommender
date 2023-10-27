@@ -111,7 +111,7 @@ const matchPaths = (url1, url2) => {
 
 /**
  * Checks if a URL is included in a list of other URLs.
- * @param {Array} urls An array of URL strings.
+ * @param {string[]} urls An array of URL strings.
  * @param {string} queryUrl A string representation of the URL to check.
  * @returns {boolean}
  */

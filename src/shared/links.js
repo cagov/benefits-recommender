@@ -7,31 +7,6 @@ const AnalyticEngines = {
 };
 
 /**
- * Find the host definition for a given host url.
- * We want to match up the origin of the request (host) with our own metadata (hostDefs).
- * @param {string} host
- * The host page, as a URL (string), from which the widget sent this request.
- * @param {import('./s3.js').Host[]} hostDefs
- * A list of host objects from the Airtable-derived definitions.
- * @returns {import('./s3.js').Host|undefined}
- * A matching host definition, or undefined if none are found.
- */
-const findHostDef = (host, hostDefs) => {
-  const pHostUrl = url.parse(host);
-
-  if (pHostUrl) {
-    return hostDefs.find((hostDef) =>
-      hostDef.urls.some((hostDefUrl) => {
-        const pHostDefUrl = url.parse(hostDefUrl);
-        return pHostDefUrl.hostname === pHostUrl.hostname;
-      })
-    );
-  } else {
-    return undefined;
-  }
-};
-
-/**
  * Add query string parameters for the target site's analytics engine.
  * @param {string} linkUrl
  * The target link's URL as string.
@@ -76,20 +51,17 @@ const addAnalytics = (linkUrl, analytics, hostDef) => {
  */
 
 /**
- * Construct link objects for the given language and host.
- * @param {import('./s3.js').Definitions} definitions
- * A parsed object representing the Airtable-derived `benefits-recs-defs.json` file.
+ * From the list of target definitions, construct link objects for the given language and host.
+ * @param {import('./s3.js').Target[]} targets
+ * Target definitions from the Airtable-derived `benefits-recs-defs.json` file.
  * @param {string} language
  * The language for this request, as an ISO 639-1 code.
- * @param {string} host
+ * @param {import('./s3.js').Host} hostDef
  * The host page, as a URL (string), from which the widget sent this request.
  * @returns {TargetLink[]}
  * A processed list of target links in the requested language.
  */
-exports.assembleLinks = (definitions, language, host) => {
-  const { targets, hosts: hostDefs } = definitions;
-  const hostDef = findHostDef(host, hostDefs);
-
+exports.assembleLinks = (targets, language, hostDef) => {
   // Unless it's Chinese, strip the language code down to two characters.
   // We need to preserve the Chinese code to display Traditional vs. Simplified.
   const langKey = language.startsWith("zh") ? language : language.slice(0, 2);
