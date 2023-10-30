@@ -111,7 +111,7 @@ const matchPaths = (url1, url2) => {
 
 /**
  * Checks if a URL is included in a list of other URLs.
- * @param {Array} urls An array of URL strings.
+ * @param {string[]} urls An array of URL strings.
  * @param {string} queryUrl A string representation of the URL to check.
  * @returns {boolean}
  */
@@ -122,8 +122,24 @@ const findMatch = (urls, queryUrl) => {
   return pQueryUrl ? pUrls.some((pUrl) => compare(pUrl, pQueryUrl)) : false;
 };
 
+/**
+ * Checks if a URL's host is included in a list of other URLs.
+ * @param {string[]} urls An array of URL strings.
+ * @param {string} queryUrl A string representation of the URL to check.
+ * @returns {boolean}
+ */
+const findHostMatch = (urls, queryUrl) => {
+  const pQueryUrl = parse(queryUrl);
+  const pUrls = urls.map((u) => parse(u)).filter((pU) => pU !== undefined);
+
+  return pQueryUrl
+    ? pUrls.some((pUrl) => compareHosts(pUrl, pQueryUrl))
+    : false;
+};
+
 exports.parse = parse;
 exports.match = match;
 exports.matchHosts = matchHosts;
 exports.matchPaths = matchPaths;
 exports.findMatch = findMatch;
+exports.findHostMatch = findHostMatch;

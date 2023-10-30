@@ -1,5 +1,4 @@
 const url = require("./url");
-const { getThrottles } = require("./throttles");
 
 /**
  * rules.js
@@ -17,8 +16,8 @@ const { getThrottles } = require("./throttles");
  * A processed list of all target links in the user's requested language.
  * @param {object} params
  * A collection of parameters from the request to help inform the rule.
- * @param {string} [params.host]
- * The host page, as a URL (string), from which the widget sent this request.
+ * @param {import('./s3.js').Host} [params.hostDef]
+ * The host partner from which the widget sent this request.
  * @param {import('./s3.js').Throttle[]} [params.throttles]
  * A processed list of target link throttles.
  * @returns {import('./links.js').TargetLink[]}
@@ -42,8 +41,8 @@ const removeThrottledLinks = (links, { throttles }) =>
  * Remove links that point back to the same host site as the widget.
  * @type {Rule}
  */
-const removeLinkBacks = (links, { host }) =>
-  links.filter((link) => !url.matchHosts(host, link.url));
+const removeLinkBacks = (links, { hostDef }) =>
+  links.filter((link) => !url.findHostMatch(hostDef?.urls || [], link.url));
 
 /**
  * Randomize the order of the links.
@@ -74,20 +73,18 @@ const rules = [
 
 /**
  * Apply the rules to the given list of links.
- * @param {import('./s3.js').Definitions} definitions
- * A parsed object representing the Airtable-derived `benefits-recs-defs.json` file.
+ * @param {import('./s3.js').Throttle[]} throttles
+ * Active throttles against target links.
  * @param {import('./links.js').TargetLink[]} allLinks
  * A processed list of all target links in the user's requested language.
- * @param {string} host
- * The host page, as a URL (string), from which the widget sent this request.
+ * @param {import('./s3.js').Host} hostDef
+ * The identified host partner from which the widget sent this request.
  * @returns {Promise<import('./links.js').TargetLink[]>}
  * A targetted list of target links.
  */
-const applyRules = async (definitions, allLinks, host) => {
-  const throttles = await getThrottles(definitions);
-
+const applyRules = async (throttles, allLinks, hostDef) => {
   const params = {
-    host,
+    hostDef,
     throttles,
   };
 

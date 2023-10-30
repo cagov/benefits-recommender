@@ -5,14 +5,12 @@ const arc = require("@architect/functions");
  * We check DynamoDB to see if each throttle is still within daily clickthrough limits.
  * We also look at other parameters, like start and end dates.
  * The goal is to see which throttles need to be activated for this request.
- * @param {import('./s3.js').Definitions} definitions
- * A parsed object representing the Airtable-derived `benefits-recs-defs.json` file.
+ * @param {import('./s3.js').Throttle[]} throttleDefs
+ * Throttle definitions from the Airtable-derived `benefits-recs-defs.json` file.
  * @returns {Promise<import('./s3.js').Throttle[]>}
  * A hydrated list of target link throttles.
  */
-exports.getThrottles = async (definitions) => {
-  const { throttles: throttleDefs } = definitions;
-
+exports.getThrottles = async (throttleDefs) => {
   try {
     const throttles = [...throttleDefs];
 
@@ -47,7 +45,7 @@ exports.getThrottles = async (definitions) => {
       }
 
       // If the throttle is still open, we need to check DynamoDB.
-      if ((throttle.exceeded = false)) {
+      if (limit && throttle.exceeded === false) {
         const promise = dynamo.throttleclicks
           .get({ name, day })
           .then((response) => {

@@ -1,4 +1,4 @@
-export const css = /* css */ `
+const defaultCss = /* css */ `
 :host {
   --benefits-recs-background-color: #E1F1EE;
   --benefits-recs-highlight-color: #006C58;
@@ -119,16 +119,7 @@ ul.link-list li a:hover {
 }
 `;
 
-export const rootHtml = /* html */ `
-<section aria-label="benefits recommendations">
-  <h2 part="header2">Claim more benefits</h2>
-  <p class="tagline">You could qualify to get:</p>
-  <ul class="link-list">
-  </ul>
-</section>
-`;
-
-export const openIcon = /* html */ `
+const openIcon = /* html */ `
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
   <g clip-path="url(#clip0_1425_1913)">
     <path d="M13.4696 5.88672V7.35634H16.1149L8.9138 14.5575L9.94253 15.5862L17.1437 8.38507V11.0304H18.6133V5.88672H13.4696ZM17.1437 17.6437H6.85634V7.35634H12V5.88672H6.85634C6.04805 5.88672 5.38672 6.54805 5.38672 7.35634V17.6437C5.38672 18.452 6.04805 19.1133 6.85634 19.1133H17.1437C17.952 19.1133 18.6133 18.452 18.6133 17.6437V12.5H17.1437V17.6437Z" fill="black"/>
@@ -141,7 +132,7 @@ export const openIcon = /* html */ `
 </svg>
 `;
 
-export const linkHtml = (link) => /* html */ `
+const defaultLinkHtml = (link) => /* html */ `
 <li>
   <a href="${link.url}" target="_blank" rel="noopener noreferrer">
     <span class="link-start">
@@ -155,3 +146,46 @@ export const linkHtml = (link) => /* html */ `
   </a>
 </li>
 `;
+
+const defaultHtml = (data) => {
+  const linkList = data.links.map((link) => defaultLinkHtml(link)).join("\n");
+
+  return /* html */ `
+    <section 
+      aria-label="benefits recommendations"
+      data-experimentName="${data.experimentName}"
+      data-experimentVariation="${data.experimentVariation}"
+    >
+      <h2>${data.header}</h2>
+      <p class="tagline">${data.tagline}</p>
+      <ul class="link-list">
+        ${linkList}
+      </ul>
+    </section>
+  `;
+};
+
+const defaultTemplate = (data) => /* html */ `
+  <style>
+    ${defaultCss}
+  </style>
+  ${defaultHtml(data)}
+`;
+
+const eddUiTemplate = (data) => /* html */ `
+  <style>
+    ${defaultCss}
+    section {
+      margin: 3rem 0;
+    }
+  </style>
+  ${defaultHtml(data)}
+`;
+
+exports.generateHtml = (data, hostDef) => {
+  if (hostDef?.id === "edd_ui_recert") {
+    return eddUiTemplate(data);
+  }
+
+  return defaultTemplate(data);
+};
