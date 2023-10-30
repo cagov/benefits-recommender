@@ -42,7 +42,7 @@ const removeThrottledLinks = (links, { throttles }) =>
  * @type {Rule}
  */
 const removeLinkBacks = (links, { hostDef }) =>
-  links.filter((link) => !url.findMatch(hostDef?.urls || [], link.url));
+  links.filter((link) => !url.findHostMatch(hostDef?.urls || [], link.url));
 
 /**
  * Randomize the order of the links.
