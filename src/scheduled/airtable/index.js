@@ -59,6 +59,10 @@ const apiSources = [
     key: "hosts",
     url: "https://api.airtable.com/v0/app2OnBmhVD4GZ68L/Hosts",
   },
+  {
+    key: "snippets",
+    url: "https://api.airtable.com/v0/app2OnBmhVD4GZ68L/Snippets",
+  },
 ];
 
 /**
@@ -116,6 +120,30 @@ exports.handler = async (req) => {
       return {
         id,
         urls: urls_rollup,
+      };
+    });
+
+  // Reformat snippets for downstream usage.
+  const snippets = airData.snippets.records
+    .filter((snippet) => {
+      const { id, placement, text } = snippet.fields;
+
+      // Filter out snippets that are incomplete.
+      const checks = [
+        id && id.trim() !== "",
+        placement && placement.trim() !== "",
+        text && text.trim() !== "",
+      ];
+
+      return checks.every((check) => check === true);
+    })
+    .map((snippet) => {
+      const { placement, text, language, host_ids } = snippet.fields;
+      return {
+        placement,
+        text,
+        language,
+        host_ids,
       };
     });
 
@@ -188,6 +216,7 @@ exports.handler = async (req) => {
     targets,
     throttles,
     hosts,
+    snippets,
   };
 
   const s3LiveCommand = new PutObjectCommand({

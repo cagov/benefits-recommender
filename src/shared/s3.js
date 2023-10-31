@@ -19,6 +19,8 @@ const s3 = new S3Client({});
  * A list of active target link throttles.
  * @property {Host[]} hosts
  * A list of hosts where the widget is placed.
+ * @property {Snippet[]} snippets
+ * A list of misc. values for use within the widget.
  */
 
 /**
@@ -79,6 +81,19 @@ const s3 = new S3Client({});
  * The id of the host.
  * @property {string[]} urls
  * The URLs associated with this host.
+ */
+
+/**
+ * A *Snippet* is a small misc. value that appears somewhere in the widget.
+ * @typedef {object} Snippet
+ * @property {string} placement
+ * The placement spot in the widget.
+ * @property {string} text
+ * The value of this snippet.
+ * @property {string} language
+ * The language code for this snippet.
+ * @property {string[]} host_ids
+ * Host IDs on which this snippet should specifically be used.
  */
 
 /**

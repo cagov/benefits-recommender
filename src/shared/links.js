@@ -62,29 +62,22 @@ const addAnalytics = (linkUrl, analytics, hostDef) => {
  * A processed list of target links in the requested language.
  */
 exports.assembleLinks = (targets, language, hostDef) => {
-  // Unless it's Chinese, strip the language code down to two characters.
-  // We need to preserve the Chinese code to display Traditional vs. Simplified.
-  const langKey = language.startsWith("zh") ? language : language.slice(0, 2);
-
   // Return a single set of values for each link, based on language.
   // Default to English where values are unavailable.
   const links = targets.map((target) => {
     const { id, translations } = target;
 
+    const translation = translations[language];
+    const { en } = translations;
+
     // Get the SVG markup for the icon.
-    const iconKey = translations[langKey]?.icon || translations.en.icon;
+    const iconKey = translation?.icon || en.icon;
     const graphic = icons[iconKey];
 
-    const lead = translations[langKey]?.lead || translations.en.lead || "";
-
-    const catalyst =
-      translations[langKey]?.catalyst || translations.en.catalyst || "";
-
-    const linkUrl = translations[langKey]?.url || translations.en.url || "";
-
-    const analytics =
-      translations[langKey]?.analytics || translations.en.analytics || "";
-
+    const lead = translation?.lead || en.lead || "";
+    const catalyst = translation?.catalyst || en.catalyst || "";
+    const linkUrl = translation?.url || en.url || "";
+    const analytics = translation?.analytics || en.analytics || "";
     const urlWithAnalytics = addAnalytics(linkUrl, analytics, hostDef);
 
     return {
@@ -92,7 +85,7 @@ exports.assembleLinks = (targets, language, hostDef) => {
       catalyst,
       url: urlWithAnalytics,
       graphic,
-      language: langKey,
+      language,
       id,
     };
   });
