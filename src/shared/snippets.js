@@ -22,7 +22,7 @@ exports.assembleSnippets = (snippetDefs, language, hostDef) => {
       if (!snippetDef.host_ids) rank += 1;
 
       // Give host-match snippets a bigger boost, to overcome defaults.
-      if (snippetDef?.host_ids?.includes(hostDef.id)) rank += 2;
+      if (hostDef && snippetDef?.host_ids?.includes(hostDef?.id)) rank += 2;
 
       return { rank, snippetDef };
     })
@@ -33,15 +33,15 @@ exports.assembleSnippets = (snippetDefs, language, hostDef) => {
 
   const header = sortedSnippetDefs.find(
     (snippetDef) => snippetDef.placement === "header"
-  ).text;
+  )?.text;
 
   const tagline = sortedSnippetDefs.find(
     (snippetDef) => snippetDef.placement === "tagline"
-  ).text;
+  )?.text;
 
   const experimentName = sortedSnippetDefs.find(
     (snippetDef) => snippetDef.placement === "experiment_name"
-  ).text;
+  )?.text;
 
   return { header, tagline, experimentName };
 };
