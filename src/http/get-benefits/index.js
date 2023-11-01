@@ -5,6 +5,7 @@ const { getDefinitions } = require("@architect/shared/s3");
 const { generateHtml } = require("@architect/shared/templates");
 const { matchHostDef } = require("@architect/shared/hosts");
 const { getThrottles } = require("@architect/shared/throttles");
+const { assembleSnippets } = require("@architect/shared/snippets.js");
 
 // Definitions will be loaded from benefits-recs-defs.json in S3.
 // We keep it outside the handler to cache it between Lambda runs.
@@ -23,16 +24,24 @@ exports.handler = arc.http.async(async (req) => {
     targets: targetDefs = [],
     hosts: hostDefs = [],
     throttles: throttleDefs = [],
+    snippets: snippetDefs = [],
   } = definitions;
 
   // Grab data from headers and URL query parameters.
-  const host = decodeURIComponent(req.query.host || "");
-  const language = req.query.language || "en";
+  const hostQuery = decodeURIComponent(req.query.host || "");
+  const langQuery = req.query.language || "en";
   const acceptHeader = req.headers?.accept;
 
+  // Unless it's Chinese, strip the language code down to two characters.
+  // We need to preserve the Chinese code to display Traditional vs. Simplified.
+  const language = langQuery.startsWith("zh")
+    ? langQuery
+    : langQuery.slice(0, 2);
+
   // Process metadata.
-  const hostDef = matchHostDef(host, hostDefs);
+  const hostDef = matchHostDef(hostQuery, hostDefs);
   const throttles = await getThrottles(throttleDefs);
+  const snippets = assembleSnippets(snippetDefs, language, hostDef);
 
   // Create target links.
   const allLinks = assembleLinks(targetDefs, language, hostDef);
@@ -47,9 +56,9 @@ exports.handler = arc.http.async(async (req) => {
   }
 
   const data = {
-    header: "Apply for more benefits!",
-    tagline: "You might be able to get:",
-    experimentName: "2023-08-01-resume-tracking",
+    header: snippets.header || "Apply for more benefits!",
+    tagline: snippets.tagline || "You might be able to get:",
+    experimentName: snippets.experimentName || "2023-08-01-resume-tracking",
     experimentVariation: links.map((link) => link.id).join("-"),
     links,
   };
