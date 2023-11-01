@@ -89,12 +89,19 @@ ul.link-list li {
 
 ul.link-list li a {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  flex-direction: row;
   justify-content: space-between;
   gap: var(--benefits-recs-card-gap);
   padding: var(--benefits-recs-card-padding);
   text-decoration: none;
   color: #000;
+}
+
+@media (max-width: 43.75rem) {
+  ul.link-list li a {
+    flex-direction: column;
+  }
 }
 
 ul.link-list li a:hover {
