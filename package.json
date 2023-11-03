@@ -7,7 +7,8 @@
     "api:test": "node tests/http-test.js",
     "widget:build": "npm run build --workspace=widget",
     "widget:build:preview": "npm run build:preview --workspace=widget",
-    "serve": "node serve/stack-server.js"
+    "serve": "node serve/stack-server.js",
+    "deploy": "npx arc deploy --name test"
   },
   "devDependencies": {
     "@architect/architect": "^10.14.2",
