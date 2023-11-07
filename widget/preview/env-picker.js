@@ -139,12 +139,22 @@ const getHostOptions = async () => {
     });
 };
 
-const hydrateMenus = async () => {
+const hydrateMenus = async (endpoint = undefined, branch = undefined) => {
   const menus = { ...defaultMenus };
   const widget = document.querySelector("cagov-benefits-recs");
 
   const hosts = (await getHostOptions()) || [];
   menus.host.options = [...menus.host.options, ...hosts];
+
+  if (endpoint && branch) {
+    const extraEndpoint = {
+      id: branch,
+      value: endpoint,
+      text: branch,
+    };
+
+    menus.endpoint.options.push(extraEndpoint);
+  }
 
   Object.keys(menus).forEach((key) => {
     const selObj = menus[key];
@@ -170,7 +180,12 @@ class EnvPicker extends window.HTMLElement {
   }
 
   async connectedCallback() {
-    const menus = await hydrateMenus();
+    // this.endpoint and this.branch are not the currently active values for the widget.
+    // They're just extra, static values we can use to create an additional endpoint option.
+    this.endpoint = this.getAttribute("endpoint");
+    this.branch = this.getAttribute("branch");
+
+    const menus = await hydrateMenus(this.endpoint, this.branch);
     this.menus = menus;
     const initialHtml = generateHtml(this.menus);
 

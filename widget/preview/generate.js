@@ -1,9 +1,14 @@
 const fs = require("fs/promises");
 
 const generate = (props) => {
-  const pr = props.prNumber
-    ? `(<a href="https://github.com/cagov/benefits-recommender/pull/${props.prNumber}">Pull Request #${props.prNumber}</a>)`
+  const { prNumber, endpointUrl, branchName } = props;
+
+  const prLink = prNumber
+    ? `(<a href="https://github.com/cagov/benefits-recommender/pull/${prNumber}">Pull Request #${props.prNumber}</a>)`
     : "";
+
+  const endpointAttribute = endpointUrl ? `endpoint="${endpointUrl}"` : "";
+  const branchNameAttribute = branchName ? `branch="${branchName}"` : "";
 
   return /* html */ `
     <!doctype html>
@@ -19,17 +24,15 @@ const generate = (props) => {
         <main>
           <hgroup>
             <h1>Benefits Recommender Preview</h1>
-            <p>Widget branch: ${props.widgetEnv} ${pr}</p>
-            <env-picker></env-picker>
+            <p>Widget branch: ${branchName} ${prLink}</p>
+            <env-picker ${endpointAttribute} ${branchNameAttribute}></env-picker>
           </hgroup>
 
           <p>Here's some test content.</p>
           <p>The widget follows.</p>
 
           <div id="widget-box">
-            <cagov-benefits-recs
-              endpoint="https://staging.br.api.innovation.ca.gov">
-            </cagov-benefits-recs>
+            <cagov-benefits-recs ${endpointAttribute}></cagov-benefits-recs>
           </div>
 
           <p>Site content runs below the widget too.</p>
@@ -43,16 +46,18 @@ const generate = (props) => {
 
 (async () => {
   // CLI:
-  // node generate.js WIDGET-BRANCH PR-NUMBER
+  // node generate.js GIT-BRANCH PR-NUMBER
   // node generate.js my-upcoming-change-branch 12
   const args = process.argv;
 
-  const widgetEnv = args[2] || "main";
+  const branchName = args[2] || "main";
   const prNumber = args[3] || undefined;
+  const endpointUrl = args[4] || undefined;
 
   const html = generate({
-    widgetEnv,
+    branchName,
     prNumber,
+    endpointUrl,
   });
 
   await fs.mkdir("dist/preview", { recursive: true });
