@@ -1,13 +1,13 @@
 #!/bin/sh
 
-#CODEBUILD_WEBHOOK_BASE_REF="refs/heads/the-branch"
-#CODEBUILD_WEBHOOK_TRIGGER="pr/5"
+# CODEBUILD_WEBHOOK_BASE_REF="refs/heads/the-branch"
+# CODEBUILD_WEBHOOK_TRIGGER="pr/5"
 
 # Get the name for our arc.codes instance.
 if [ -n $CODEBUILD_WEBHOOK_BASE_REF ]
 then
   # Strip "refs/heads/" from the GitHub ref.
-  BENEFITS_RECS_INSTANCE_NAME=$(echo ${CODEBUILD_WEBHOOK_BASE_REF/refs\/heads\//} | sed 's|[^A-Za-z0-9-]|-|g' | sed -E 's|-*([A-Za-z0-9]*.*[A-Za-z0-9]+)-*|\1|')
+  BENEFITS_RECS_INSTANCE_NAME=$(echo ${CODEBUILD_WEBHOOK_BASE_REF#refs\/heads\/} | sed 's|[^A-Za-z0-9-]|-|g' | sed -E 's|-*([A-Za-z0-9]*.*[A-Za-z0-9]+)-*|\1|')
 else 
   # Provide this default if we're testing and the PR info isn't available.
   BENEFITS_RECS_INSTANCE_NAME="codebuild-test"
@@ -16,7 +16,7 @@ fi
 if [ -n $CODEBUILD_WEBHOOK_TRIGGER ]
 then
   # strip "pr/" from webhook trigger
-  BENEFITS_RECS_PR_NUMBER=${CODEBUILD_WEBHOOK_TRIGGER/pr\//}
+  BENEFITS_RECS_PR_NUMBER=${CODEBUILD_WEBHOOK_TRIGGER#pr\/}
 fi
 
 echo "PR number: $BENEFITS_RECS_PR_NUMBER"
