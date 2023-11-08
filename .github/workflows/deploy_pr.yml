@@ -1,11 +1,8 @@
-name: PR preview deployment
+name: PR preview notification
 on:
   pull_request:
     types:
       - opened
-      - synchronize
-      - ready_for_review
-      - reopened
 
 jobs:
   build_deploy:
