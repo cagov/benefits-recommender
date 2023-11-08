@@ -15,7 +15,7 @@ else
   BENEFITS_RECS_INSTANCE_NAME=$(echo ${CODEBUILD_WEBHOOK_HEAD_REF#refs\/heads\/} | sed 's|[^A-Za-z0-9-]|-|g' | sed -E 's|-*([A-Za-z0-9]*.*[A-Za-z0-9]+)-*|\1|') 
 fi
 
-if [ -n $CODEBUILD_WEBHOOK_TRIGGER ]
+if [ -z $CODEBUILD_WEBHOOK_TRIGGER ]
 then
   BENEFITS_RECS_PR_NUMBER="9999"
 else
@@ -37,7 +37,7 @@ then
   exit $BENEFITS_RECS_DEPLOY_STATUS
 fi
 
-BENEFITS_RECS_ENDPOINT_URL=$(echo "\001$BENEFITS_RECS_DEPLOY_OUTPUT\002" | tail -n 2 | xargs)
+BENEFITS_RECS_ENDPOINT_URL=$(echo "$BENEFITS_RECS_DEPLOY_OUTPUT" | tail -n 2 | xargs)
 echo "Endpoint: $BENEFITS_RECS_ENDPOINT_URL"
 
 npm run widget:build:preview -- $BENEFITS_RECS_INSTANCE_NAME $BENEFITS_RECS_PR_NUMBER $BENEFITS_RECS_ENDPOINT_URL
