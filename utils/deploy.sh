@@ -26,8 +26,8 @@ fi
 echo "PR number: $BENEFITS_RECS_PR_NUMBER"
 echo "Git branch: $BENEFITS_RECS_INSTANCE_NAME"
 
-# Attempt to deploy. tee streams the output.
-BENEFITS_RECS_DEPLOY_OUTPUT=$(npx arc deploy --name $BENEFITS_RECS_INSTANCE_NAME | tee /dev/stderr)
+# Attempt to deploy. This will appear to hang. Just wait for it.
+BENEFITS_RECS_DEPLOY_OUTPUT=$(npx arc deploy --name $BENEFITS_RECS_INSTANCE_NAME)
 BENEFITS_RECS_DEPLOY_STATUS=$?
 
 # If deployment failed, let's bail out here.
