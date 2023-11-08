@@ -1,7 +1,7 @@
 #!/bin/sh
 
-CODEBUILD_WEBHOOK_HEAD_REF="refs/heads/the-branch"
-CODEBUILD_WEBHOOK_TRIGGER="pr/5"
+# CODEBUILD_WEBHOOK_HEAD_REF="refs/heads/the-branch"
+# CODEBUILD_WEBHOOK_TRIGGER="pr/5"
 BENEFITS_RECS_DEPLOY_OUTPUT="✓ Success! Deployed app in 55.815 seconds\n    https://7ksmy2xna5.execute-api.us-west-1.amazonaws.com\n"
 
 # Get the name for our arc.codes instance.
