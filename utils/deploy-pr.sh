@@ -6,7 +6,7 @@
 # BENEFITS_RECS_DEPLOY_OUTPUT="✓ Success! Deployed app in 55.815 seconds\n    https://7ksmy2xna5.execute-api.us-west-1.amazonaws.com\n"
 
 # Get the name for our arc.codes instance.
-if [ -z $CODEBUILD_WEBHOOK_HEAD_REF ]
+if [ -z "$CODEBUILD_WEBHOOK_HEAD_REF" ]
 then
   # Provide this default if we're testing and the PR info isn't available.
   BENEFITS_RECS_INSTANCE_NAME="codebuild-test"
@@ -15,7 +15,7 @@ else
   BENEFITS_RECS_INSTANCE_NAME=$(echo ${CODEBUILD_WEBHOOK_HEAD_REF#refs\/heads\/} | sed 's|[^A-Za-z0-9-]|-|g' | sed -E 's|-*([A-Za-z0-9]*.*[A-Za-z0-9]+)-*|\1|') 
 fi
 
-if [ -z $CODEBUILD_WEBHOOK_TRIGGER ]
+if [ -z "$CODEBUILD_WEBHOOK_TRIGGER" ]
 then
   BENEFITS_RECS_PR_NUMBER="9999"
 else
@@ -23,6 +23,7 @@ else
   BENEFITS_RECS_PR_NUMBER=${CODEBUILD_WEBHOOK_TRIGGER#pr\/}
 fi
 
+echo "\n> Deploying arc.codes app."
 echo "PR number: $BENEFITS_RECS_PR_NUMBER"
 echo "Git branch: $BENEFITS_RECS_INSTANCE_NAME"
 
@@ -40,6 +41,8 @@ fi
 BENEFITS_RECS_ENDPOINT_URL=$(echo $BENEFITS_RECS_DEPLOY_OUTPUT | tail -n 2 | xargs)
 echo "Endpoint: $BENEFITS_RECS_ENDPOINT_URL"
 
+echo "\n> Generating front-end preview assets."
+npm run widget:build
 npm run widget:build:preview -- $BENEFITS_RECS_INSTANCE_NAME $BENEFITS_RECS_PR_NUMBER $BENEFITS_RECS_ENDPOINT_URL
 
 echo "\n> Uploading to S3."
