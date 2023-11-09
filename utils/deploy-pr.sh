@@ -38,7 +38,7 @@ then
   exit $BENEFITS_RECS_DEPLOY_STATUS
 fi
 
-BENEFITS_RECS_ENDPOINT_URL=$(echo "\001$BENEFITS_RECS_DEPLOY_OUTPUT\002" | tail -n 2 | xargs)
+BENEFITS_RECS_ENDPOINT_URL=$(echo "\001$BENEFITS_RECS_DEPLOY_OUTPUT\002" | tail -n 2 | xargs | sed "s,\x1B\[[0-9;]*[a-zA-Z],,g")
 echo "Endpoint: $BENEFITS_RECS_ENDPOINT_URL"
 
 echo "\n> Generating front-end preview assets."
