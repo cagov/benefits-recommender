@@ -29,7 +29,7 @@ echo "PR number: $BENEFITS_RECS_PR_NUMBER"
 echo "Git branch: $BENEFITS_RECS_INSTANCE_NAME"
 
 # Attempt to deploy. This will appear to hang. Just wait for it.
-BENEFITS_RECS_DEPLOY_OUTPUT=$(npx arc deploy --name $BENEFITS_RECS_INSTANCE_NAME --tags odieng=benefts-recommender --tags env=pr-preview)
+BENEFITS_RECS_DEPLOY_OUTPUT=$(npx arc deploy --name $BENEFITS_RECS_INSTANCE_NAME --tags odieng=benefts-recommender --tags env=development)
 BENEFITS_RECS_DEPLOY_STATUS=$?
 
 # If deployment failed, let's bail out here.
@@ -40,7 +40,7 @@ then
 fi
 
 BENEFITS_RECS_ENDPOINT_URL=$(echo "$BENEFITS_RECS_DEPLOY_OUTPUT" | tail -n 2 | xargs | sed 's/\\x1B\[\?25h//g')
-echo " <= weird ANSI escape output from capturing the deploy logs."
+echo " <= That's ANSI escape output from capturing the deploy logs."
 
 echo "Endpoint: $BENEFITS_RECS_ENDPOINT_URL"
 

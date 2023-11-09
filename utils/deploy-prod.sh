@@ -2,7 +2,7 @@
 
 echo "\n> Deploying arc.codes app to production."
 # Attempt to deploy. This will appear to hang. Just wait for it.
-npx arc deploy --production
+npx arc deploy --production --tags odieng=benefts-recommender --tags env=production
 
 echo "\n> Generating front-end preview assets."
 npm run widget:build

@@ -23,7 +23,7 @@ const generate = (props) => {
       <body>
         <main>
           <hgroup>
-            <h1>Benefits Recommender Preview</h1>
+            <h1>Benefits Recommender Preview!</h1>
             <p>Widget branch: ${branchName} ${prLink}</p>
             <env-picker ${endpointAttribute} ${branchNameAttribute}></env-picker>
           </hgroup>
