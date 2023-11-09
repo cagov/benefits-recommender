@@ -34,11 +34,11 @@ BENEFITS_RECS_DEPLOY_STATUS=$?
 # If deployment failed, let's bail out here.
 if [ $BENEFITS_RECS_DEPLOY_STATUS -gt 0 ]
 then
-  echo "\x01$BENEFITS_RECS_DEPLOY_OUTPUT\x02"
+  echo "$BENEFITS_RECS_DEPLOY_OUTPUT"
   exit $BENEFITS_RECS_DEPLOY_STATUS
 fi
 
-BENEFITS_RECS_ENDPOINT_URL=$(echo "\x01$BENEFITS_RECS_DEPLOY_OUTPUT\x02" | tail -n 2 | xargs | sed $"s,\x1B\[[0-9;]*[a-zA-Z],,g")
+BENEFITS_RECS_ENDPOINT_URL=$(echo "$BENEFITS_RECS_DEPLOY_OUTPUT" | tail -n 2 | xargs )
 echo "Endpoint: $BENEFITS_RECS_ENDPOINT_URL"
 
 echo "\n> Generating front-end preview assets."
