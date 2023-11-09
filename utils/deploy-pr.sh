@@ -15,6 +15,7 @@ else
   BENEFITS_RECS_INSTANCE_NAME=$(echo ${CODEBUILD_WEBHOOK_HEAD_REF#refs\/heads\/} | sed 's|[^A-Za-z0-9-]|-|g' | sed -E 's|-*([A-Za-z0-9]*.*[A-Za-z0-9]+)-*|\1|') 
 fi
 
+# Get the PR number.
 if [ -z "$CODEBUILD_WEBHOOK_TRIGGER" ]
 then
   BENEFITS_RECS_PR_NUMBER="9999"
@@ -39,7 +40,9 @@ then
 fi
 
 BENEFITS_RECS_ENDPOINT_URL=$(echo "$BENEFITS_RECS_DEPLOY_OUTPUT" | tail -n 2 | xargs | sed 's/\\x1B\[\?25h//g')
-# echo "Endpoint: $BENEFITS_RECS_ENDPOINT_URL"
+echo " <= weird ANSI escape output from capturing the deploy logs."
+
+echo "Endpoint: $BENEFITS_RECS_ENDPOINT_URL"
 
 echo "\n> Generating front-end preview assets."
 npm run widget:build
