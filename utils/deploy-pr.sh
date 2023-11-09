@@ -28,7 +28,7 @@ echo "PR number: $BENEFITS_RECS_PR_NUMBER"
 echo "Git branch: $BENEFITS_RECS_INSTANCE_NAME"
 
 # Attempt to deploy. This will appear to hang. Just wait for it.
-BENEFITS_RECS_DEPLOY_OUTPUT=$(npx arc deploy --name $BENEFITS_RECS_INSTANCE_NAME)
+BENEFITS_RECS_DEPLOY_OUTPUT=$(npx arc deploy --name $BENEFITS_RECS_INSTANCE_NAME --tags odieng=benefts-recommender --tags env=pr-preview)
 BENEFITS_RECS_DEPLOY_STATUS=$?
 
 # If deployment failed, let's bail out here.
@@ -39,7 +39,7 @@ then
 fi
 
 BENEFITS_RECS_ENDPOINT_URL=$(echo "$BENEFITS_RECS_DEPLOY_OUTPUT" | tail -n 2 | xargs | sed 's/\\x1B\[\?25h//g')
-printf "Endpoint: %s" $BENEFITS_RECS_ENDPOINT_URL
+# echo "Endpoint: $BENEFITS_RECS_ENDPOINT_URL"
 
 echo "\n> Generating front-end preview assets."
 npm run widget:build
@@ -49,6 +49,9 @@ echo "\n> Uploading to S3."
 aws s3 sync ./widget/dist s3://staging.cdn.innovation.ca.gov/br/pr/$BENEFITS_RECS_INSTANCE_NAME --follow-symlinks
 
 echo "\n> Sending invalidation to Cloudfront cache."
-AWS_PAGER="" aws cloudfront create-invalidation --distribution-id EPGKQG9OR4C9S --paths "/br/*"
+AWS_PAGER="" 
+AWS_RETRY_MODE="standard"
+AWS_MAX_ATTEMPTS=6
+aws cloudfront create-invalidation --distribution-id EPGKQG9OR4C9S --paths "/br/*"
 
 echo "\nPreview: https://staging.cdn.innovation.ca.gov/br/pr/$BENEFITS_RECS_INSTANCE_NAME/preview/index.html"
