@@ -117,6 +117,12 @@ ul.link-list li a:hover {
 .link-icon, .open-icon {
   display: inline-flex
 }
+
+.link-icon {
+  height: 40px;
+  width: 40px;
+  align-items: center;
+}
 `;
 
 const openIcon = /* html */ `
