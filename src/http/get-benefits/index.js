@@ -7,6 +7,18 @@ const { matchHostDef } = require("@architect/shared/hosts");
 const { getThrottles } = require("@architect/shared/throttles");
 const { assembleSnippets } = require("@architect/shared/snippets.js");
 
+/**
+ * Parses Chinese language codes to determine the best available script.
+ * @param {string} langQuery The language code
+ * @returns
+ */
+const parseZh = (langQuery = "") => {
+  if (langQuery.toLowerCase() === "zh") return "zh-Hans";
+  if (langQuery.toLowerCase().startsWith("zh-hans")) return "zh-Hans";
+  if (langQuery.toLowerCase().startsWith("zh-hant")) return "zh-Hant";
+  return langQuery;
+};
+
 // Definitions will be loaded from benefits-recs-defs.json in S3.
 // We keep it outside the handler to cache it between Lambda runs.
 /** @type {import('./node_modules/@architect/shared/s3.js').Definitions} */
@@ -35,8 +47,8 @@ exports.handler = arc.http.async(async (req) => {
   // Unless it's Chinese, strip the language code down to two characters.
   // We need to preserve the Chinese code to display Traditional vs. Simplified.
   const language = langQuery.startsWith("zh")
-    ? langQuery
-    : langQuery.slice(0, 2);
+    ? parseZh(langQuery)
+    : langQuery.slice(0, 2).toLowerCase();
 
   // Process metadata.
   const hostDef = matchHostDef(hostQuery, hostDefs);
