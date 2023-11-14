@@ -61,6 +61,26 @@ const defaultMenus = {
         value: "en",
         text: "English",
       },
+      {
+        id: "es",
+        value: "es",
+        text: "Spanish",
+      },
+      {
+        id: "vi",
+        value: "vi",
+        text: "Vietnamese",
+      },
+      {
+        id: "zh-Hans",
+        value: "zh-Hans",
+        text: "Chinese (Simplified)",
+      },
+      {
+        id: "zh-Hant",
+        value: "zh-Hans",
+        text: "Chinese (Traditional)",
+      },
     ],
   },
 };
