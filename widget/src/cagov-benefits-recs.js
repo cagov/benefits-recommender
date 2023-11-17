@@ -22,11 +22,7 @@ export class CaGovBenefitsRecs extends window.HTMLElement {
     });
 
     // Retrieve set of benefits links from API.
-    fetch(benefitsUrl.href, {
-      headers: {
-        Accept: "text/html",
-      },
-    })
+    fetch(benefitsUrl.href, { headers: { Accept: "text/html" } })
       .then(async (response) => {
         const html = await response.text();
 
@@ -34,10 +30,9 @@ export class CaGovBenefitsRecs extends window.HTMLElement {
         if (html && response.ok) {
           this.attachShadow({ mode: "open" });
           this.shadowRoot.innerHTML = html;
-          const section = this.shadowRoot.querySelector("section");
 
-          this.experimentName = section.dataset.experimentName;
-          this.experimentVariation = section.dataset.experimentVariation;
+          const apiDataEl = this.shadowRoot.querySelector("#data");
+          this.apiData = apiDataEl ? JSON.parse(apiDataEl.textContent) : {};
 
           this.recordEvent("render");
           this.applyListeners();
@@ -57,8 +52,7 @@ export class CaGovBenefitsRecs extends window.HTMLElement {
       userAgent: navigator.userAgent,
       language: this.language,
       income: this.income,
-      experimentName: this.experimentName,
-      experimentVariation: this.experimentVariation,
+      apiData: this.apiData,
     };
 
     const data = Object.assign({ event }, defaults, details);
