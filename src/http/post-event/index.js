@@ -46,10 +46,10 @@ exports.handler = arc.http(async (req) => {
       postData.eventKey += `-${postData.link}`;
     }
     if (!postData.experimentName) {
-      postData.experimentName = apiData?.experimentName;
+      postData.experimentName = apiData?.experimentName || "";
     }
     if (!postData.experimentVariation) {
-      postData.experimentVariation = apiData?.experimentVariation;
+      postData.experimentVariation = apiData?.experimentVariation || "";
     }
 
     postData.pageUrl = postData.displayURL;
