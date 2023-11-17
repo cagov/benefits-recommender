@@ -159,8 +159,8 @@ const defaultHtml = (data) => {
   return /* html */ `
     <section 
       aria-label="benefits recommendations"
-      data-experimentName="${data.experimentName}"
-      data-experimentVariation="${data.experimentVariation}"
+      data-experimentName="${data.apiData.experimentName}"
+      data-experimentVariation="${data.apiData.experimentVariation}"
     >
       <h2>${data.header}</h2>
       <p class="tagline">${data.tagline}</p>
@@ -171,10 +171,21 @@ const defaultHtml = (data) => {
   `;
 };
 
+const defaultData = (data) => {
+  const { apiData } = data;
+
+  return /* html */ `
+    <script id="data" type="application/json">
+      ${JSON.stringify(apiData)}
+    </script>
+  `;
+};
+
 const defaultTemplate = (data) => /* html */ `
   <style>
     ${defaultCss}
   </style>
+  ${defaultData(data)}
   ${defaultHtml(data)}
 `;
 

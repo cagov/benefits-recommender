@@ -32,8 +32,12 @@ exports.handler = arc.http(async (req) => {
 
   try {
     if (!postData.event) throw ReferenceError("missing event type");
-
     if (!postData.displayURL) throw ReferenceError("missing displayUrl");
+
+    const { apiData } = postData;
+    if (postData.apiData) {
+      delete postData.apiData;
+    }
 
     postData.timestamp = new Date().getTime().toString();
     // in DynamoDB the eventKey is the partition key. It needs to be a fully reproducible string required in queries
@@ -41,6 +45,13 @@ exports.handler = arc.http(async (req) => {
     if (postData.link) {
       postData.eventKey += `-${postData.link}`;
     }
+    if (!postData.experimentName) {
+      postData.experimentName = apiData?.experimentName;
+    }
+    if (!postData.experimentVariation) {
+      postData.experimentVariation = apiData?.experimentVariation;
+    }
+
     postData.pageUrl = postData.displayURL;
     // in DynamoDB the displayUrl is the sort key, the combination of the partition key and sort key needs to be unique or records are overwritten
     postData.displayURL += `---${postData.timestamp}-${Math.random()}`;
@@ -48,8 +59,7 @@ exports.handler = arc.http(async (req) => {
     // store the event object in DynamoDB
     const event = await events.put(postData);
 
-    console.log("event data recorded");
-    console.log(postData);
+    console.log({ postData, apiData });
 
     if (postData.event === "click") {
       // record a click to the throttle table
