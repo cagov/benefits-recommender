@@ -35,6 +35,7 @@ exports.handler = arc.http(async (req) => {
     if (!postData.displayURL) throw ReferenceError("missing displayUrl");
 
     const { apiData } = postData;
+
     if (postData.apiData) {
       delete postData.apiData;
     }

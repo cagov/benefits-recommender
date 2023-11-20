@@ -4,21 +4,27 @@ export class CaGovBenefitsRecs extends window.HTMLElement {
   }
 
   connectedCallback() {
-    const defaultEndpoint = "https://br.api.innovation.ca.gov";
-    this.endpoint = this.getAttribute("endpoint") || defaultEndpoint;
+    const attributes = this.getAttributeNames().reduce((bucket, name) => {
+      bucket[name] = this.getAttribute(name);
+      return bucket;
+    }, {});
 
-    const lang = document.querySelector("html").getAttribute("lang");
-    this.language = this.getAttribute("language") || lang;
+    const { endpoint, host, language, ...rest } = attributes;
 
-    this.income = this.getAttribute("income");
-    this.host = this.getAttribute("host") || window.location.href;
+    // this.attributes is reserved by JS spec, so this.attrs it is.
+    this.attrs = {
+      language: language || document.documentElement.lang,
+      host: host || window.location.href,
+      ...rest,
+    };
+
+    this.endpoint = endpoint || "https://br.api.innovation.ca.gov";
 
     const benefitsUrl = new URL("/benefits", this.endpoint);
 
     // We'll append the query parameters to the URL of our API call.
-    const queryKeys = ["host", "language"];
-    queryKeys.forEach((key) => {
-      if (this[key]) benefitsUrl.searchParams.append(key, this[key]);
+    Object.keys(this.attrs).forEach((key) => {
+      benefitsUrl.searchParams.append(key, this.attrs[key]);
     });
 
     // Retrieve set of benefits links from API.
@@ -31,8 +37,8 @@ export class CaGovBenefitsRecs extends window.HTMLElement {
           this.attachShadow({ mode: "open" });
           this.shadowRoot.innerHTML = html;
 
-          const apiDataEl = this.shadowRoot.querySelector("#data");
-          this.apiData = apiDataEl ? JSON.parse(apiDataEl.textContent) : {};
+          const sectionEl = this.shadowRoot.querySelector("section");
+          this.apiData = { ...sectionEl.dataset };
 
           this.recordEvent("render");
           this.applyListeners();
@@ -50,8 +56,7 @@ export class CaGovBenefitsRecs extends window.HTMLElement {
     const defaults = {
       displayURL: window.location.toString(),
       userAgent: navigator.userAgent,
-      language: this.language,
-      income: this.income,
+      language: this.attrs.language,
       apiData: this.apiData,
     };
 

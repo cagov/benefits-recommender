@@ -159,8 +159,12 @@ const defaultHtml = (data) => {
   return /* html */ `
     <section 
       aria-label="benefits recommendations"
-      data-experimentName="${data.apiData.experimentName}"
-      data-experimentVariation="${data.apiData.experimentVariation}"
+      data-experiment-name="${data.experimentName}"
+      data-experiment-variation="${data.experimentVariation}"
+      data-host-query="${data.host.query}"
+      data-host-selection="${data.host.selection}"
+      data-language-query="${data.language.query}"
+      data-language-selection="${data.language.selection}"
     >
       <h2>${data.header}</h2>
       <p class="tagline">${data.tagline}</p>
@@ -171,21 +175,10 @@ const defaultHtml = (data) => {
   `;
 };
 
-const defaultData = (data) => {
-  const { apiData } = data;
-
-  return /* html */ `
-    <script id="data" type="application/json">
-      ${JSON.stringify(apiData)}
-    </script>
-  `;
-};
-
 const defaultTemplate = (data) => /* html */ `
   <style>
     ${defaultCss}
   </style>
-  ${defaultData(data)}
   ${defaultHtml(data)}
 `;
 
