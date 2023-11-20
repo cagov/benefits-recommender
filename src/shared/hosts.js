@@ -11,16 +11,5 @@ const url = require("./url");
  * A matching host definition, or undefined if none are found.
  */
 exports.matchHostDef = (host, hostDefs) => {
-  const pHostUrl = url.parse(host);
-
-  if (pHostUrl && hostDefs) {
-    return hostDefs.find((hostDef) =>
-      hostDef.urls.some((hostDefUrl) => {
-        const pHostDefUrl = url.parse(hostDefUrl);
-        return pHostDefUrl.hostname === pHostUrl.hostname;
-      })
-    );
-  } else {
-    return undefined;
-  }
+  return hostDefs?.find((hostDef) => url.findMatch(hostDef.urls, host));
 };
