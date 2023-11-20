@@ -70,17 +70,15 @@ exports.handler = arc.http.async(async (req) => {
   const data = {
     header: snippets.header || "Apply for more benefits!",
     tagline: snippets.tagline || "You might be able to get:",
-    apiData: {
-      experimentName: snippets.experimentName || "2023-08-01-resume-tracking",
-      experimentVariation: links.map((link) => link.id).join("-"),
-      host: {
-        query: hostQuery,
-        definitionId: hostDef?.id,
-      },
-      language: {
-        query: langQuery,
-        translationKey: language,
-      },
+    experimentName: snippets.experimentName || "2023-08-01-resume-tracking",
+    experimentVariation: links.map((link) => link.id).join("-"),
+    host: {
+      query: hostQuery,
+      selection: hostDef?.id || "null",
+    },
+    language: {
+      query: langQuery,
+      selection: language,
     },
     links,
   };
