@@ -95,6 +95,7 @@ ul.link-list li:last-child {
   height: 3.5rem;
   border-radius: 50%;
   background: #EDEDEF;
+  fill: #3B3A48;
 }
 `;
 
