@@ -1,4 +1,4 @@
-const defaultCss = /* css */ `
+const defaultCssVars = /* css */ `
 :host {
   --benefits-recs-background: #E7EEF9;
   --benefits-recs-list-background: #FFF;
@@ -8,16 +8,30 @@ const defaultCss = /* css */ `
   --benefits-recs-text-color: #3B3A48;
   --benefits-recs-link-color: #165AC2;
 }
+`;
 
+const eddAllCssVars = /* css */ `
+:host {
+  --benefits-recs-background: #EDEDEF;
+  --benefits-recs-list-background: #FFF;
+  --benefits-recs-list-border-color: #D4D4D7;
+  --benefits-recs-icon-background: #EDEDEF;
+  --benefits-recs-icon-fill: #3B3A48;
+  --benefits-recs-text-color: #3B3A48;
+  --benefits-recs-link-color: #046B99;
+}
+`;
+
+const defaultCss = /* css */ `
 section {
-  background: var(--benefits-recs-background);
+  background: var(--benefits-recs-background, #E7EEF9);
   padding: 1.5rem;
   max-width: 42.25rem;
   font-family: system-ui, sans-serif;
 }
 
 h2 {
-  color: var(--benefits-recs-text-color);
+  color: var(--benefits-recs-text-color, #3B3A48);
   font-size: 2.3125rem;
   font-weight: 700;
   line-height: 3.17969rem;
@@ -31,7 +45,7 @@ h2 {
 }
 
 .lead {
-  color: var(--benefits-recs-text-color);
+  color: var(--benefits-recs-text-color, #3B3A48);
   font-size: 1.4375rem;
   font-weight: 700;
   line-height: 2.33594rem;
@@ -44,7 +58,7 @@ h2 {
 }
 
 .catalyst {
-  color: var(--benefits-recs-link-color);
+  color: var(--benefits-recs-link-color, #165AC2);
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 2rem;
@@ -62,8 +76,8 @@ ul.link-list {
   display: flex;
   flex-direction: column;
   border-radius: 0.5rem;
-  border: 1px solid var(--benefits-recs-list-border-color);
-  background: var(--benefits-recs-list-background);
+  border: 1px solid var(--benefits-recs-list-border-color, #D4D4D7);
+  background: var(--benefits-recs-list-background, #FFF);
 }
 
 ul.link-list li {
@@ -72,7 +86,7 @@ ul.link-list li {
   gap: 0.5rem;
   list-style: none;
   padding: 1.5rem;
-  border-bottom: 1px solid var(--benefits-recs-list-border-color);
+  border-bottom: 1px solid var(--benefits-recs-list-border-color, #D4D4D7);
 }
 
 ul.link-list li:last-child {
@@ -82,7 +96,7 @@ ul.link-list li:last-child {
 .open-icon {
   display: inline-flex;
   margin: 0 0.25rem;
-  fill: var(--benefits-recs-link-color);
+  fill: var(--benefits-recs-link-color, #165AC2);
 }
 
 .link-icon {
@@ -92,8 +106,8 @@ ul.link-list li:last-child {
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  background: var(--benefits-recs-icon-background);
-  fill: var(--benefits-recs-icon-fill);
+  background: var(--benefits-recs-icon-background, #EDEDEF);
+  fill: var(--benefits-recs-icon-fill, #003688);
 }
 `;
 
@@ -137,6 +151,7 @@ const defaultHtml = (data) => {
 
 const defaultTemplate = (data) => /* html */ `
   <style>
+    ${defaultCssVars}
     ${defaultCss}
   </style>
   ${defaultHtml(data)}
@@ -144,6 +159,7 @@ const defaultTemplate = (data) => /* html */ `
 
 const eddUiTemplate = (data) => /* html */ `
   <style>
+    ${eddAllCssVars}
     ${defaultCss}
     section {
       margin: 3rem 0;
@@ -152,9 +168,23 @@ const eddUiTemplate = (data) => /* html */ `
   ${defaultHtml(data)}
 `;
 
+const eddSDITemplate = (data) => /* html */ `
+  <style>
+    ${eddAllCssVars}
+    ${defaultCss}
+  </style>
+  ${defaultHtml(data)}
+`;
+
 exports.generateHtml = (data, hostDef) => {
-  if (hostDef?.id === "edd_ui_recert") {
+  const id = hostDef?.id;
+
+  if (id === "edd_ui_recert") {
     return eddUiTemplate(data);
+  }
+
+  if (id === "edd_pfl_submit" || id === "edd_sdi_new") {
+    return eddSDITemplate(data);
   }
 
   return defaultTemplate(data);
