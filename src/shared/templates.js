@@ -1,73 +1,73 @@
-const defaultCss = /* css */ `
+const defaultCssVars = /* css */ `
 :host {
-  --benefits-recs-background-color: #E1F1EE;
-  --benefits-recs-highlight-color: #006C58;
-  --benefits-recs-text-color: #000000;
-  --benefits-recs-card-background-color: #FFFFFF;
-
-  --benefits-recs-title-font-size: 2rem;
-  --benefits-recs-tagline-font-size: 1.25rem;
-  --benefits-recs-lead-font-size: 1.4375rem;
-  --benefits-recs-catalyst-font-size: 1.25rem;
-  --benefits-recs-padding: 2rem;
-  --benefits-recs-gap: 1rem;
-  --benefits-recs-card-padding: 1.25rem;
-  --benefits-recs-card-gap: 1rem;
-  --benefits-recs-link-end-gap: 0.5rem;
+  --benefits-recs-background: #E7EEF9;
+  --benefits-recs-list-background: #FFF;
+  --benefits-recs-list-border-color: #D4D4D7;
+  --benefits-recs-icon-background: #EDEDEF;
+  --benefits-recs-icon-fill: #003688;
+  --benefits-recs-text-color: #3B3A48;
+  --benefits-recs-link-color: #165AC2;
 }
+`;
 
-@media (max-width: 28.75rem) {
-  :host {
-    --benefits-recs-title-font-size: 1.5rem;
-    --benefits-recs-tagline-font-size: 0.9375rem;
-    --benefits-recs-lead-font-size: 1.125rem;
-    --benefits-recs-catalyst-font-size: 0.9375rem;
-    --benefits-recs-padding: 1.52rem;
-    --benefits-recs-gap: 0.76rem;
-    --benefits-recs-card-padding: 0.95rem;
-    --benefits-recs-card-gap: 0.76rem;
-    --benefits-recs-link-end-gap: 0.38rem;
-  }
+const eddAllCssVars = /* css */ `
+:host {
+  --benefits-recs-background: #EDEDEF;
+  --benefits-recs-list-background: #FFF;
+  --benefits-recs-list-border-color: #D4D4D7;
+  --benefits-recs-icon-background: #EDEDEF;
+  --benefits-recs-icon-fill: #3B3A48;
+  --benefits-recs-text-color: #3B3A48;
+  --benefits-recs-link-color: #046B99;
 }
+`;
 
+const defaultCss = /* css */ `
 section {
-  background: var(--benefits-recs-background-color);
-  border-left: 3px solid var(--benefits-recs-highlight-color);
-  padding: var(--benefits-recs-padding);
-  display: flex;
-  flex-direction: column;
-  gap: var(--benefits-recs-gap);
-  max-width: 46.875rem;
+  background: var(--benefits-recs-background, #E7EEF9);
+  padding: 1.5rem;
+  max-width: 42.25rem;
   font-family: system-ui, sans-serif;
 }
 
 h2 {
-  font-size: var(--benefits-recs-title-font-size);
-  font-weight: 600;
-  color: var(--benefits-recs-highlight-color);
+  color: var(--benefits-recs-text-color, #3B3A48);
+  font-size: 2.3125rem;
+  font-weight: 700;
+  line-height: 3.17969rem;
+  margin: 0 0 1.5rem 0;
 }
-
-.tagline {
-  font-size: var(--benefits-recs-tagline-font-size);
+@media (max-width: 28.75rem) {
+  h2 {
+    font-size: 2.0625rem;
+    line-height: 2.5625rem;
+  }
 }
 
 .lead {
-  font-size: var(--benefits-recs-lead-font-size);
+  color: var(--benefits-recs-text-color, #3B3A48);
+  font-size: 1.4375rem;
   font-weight: 700;
+  line-height: 2.33594rem;
+}
+@media (max-width: 28.75rem) {
+  .lead {
+    font-size: 1.25rem;
+    line-height: 2.03125rem;
+  }
 }
 
 .catalyst {
-  font-size: var(--benefits-recs-catalyst-font-size);
-  text-align: right;
-  flex-grow: 2;
+  color: var(--benefits-recs-link-color, #165AC2);
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 2rem;
 }
-
-h2, .tagline {
-  margin: 0;
-}
-
-.tagline, .catalyst, .lead {
-  color: var(--benefits-recs-text-color);
+@media (max-width: 28.75rem) {
+  .catalyst {
+    font-size: 1rem;
+    line-height: 1.6875rem;
+  }
 }
 
 ul.link-list {
@@ -75,80 +75,55 @@ ul.link-list {
   padding: 0;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  gap: var(--benefits-recs-gap);
+  border-radius: 0.5rem;
+  border: 1px solid var(--benefits-recs-list-border-color, #D4D4D7);
+  background: var(--benefits-recs-list-background, #FFF);
 }
 
 ul.link-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   list-style: none;
-  background: var(--benefits-recs-card-background-color);
-  flex-grow: 1;
-  max-width: 100%;
-  border-radius: 0.3125rem
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--benefits-recs-list-border-color, #D4D4D7);
 }
 
-ul.link-list li a {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: var(--benefits-recs-card-gap);
-  padding: var(--benefits-recs-card-padding);
-  text-decoration: none;
-  color: #000;
+ul.link-list li:last-child {
+  border-bottom: none;
 }
 
-ul.link-list li a:hover {
-  box-shadow: 0 0 0.75rem rgba(0, 0, 0, 0.25);
-}
-
-.link-start {
-  display: flex;
-  gap: var(--benefits-recs-card-gap);
-  align-items: center;
-}
-
-.link-end {
-  display: flex;
-  flex-grow: 2;
-  align-items: center;
-  gap: var(--benefits-recs-link-end-gap);
-}
-
-.link-icon, .open-icon {
-  display: inline-flex
+.open-icon {
+  display: inline-flex;
+  margin: 0 0.25rem;
+  fill: var(--benefits-recs-link-color, #165AC2);
 }
 
 .link-icon {
-  height: 40px;
-  width: 40px;
+  display: inline-flex;
   align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: var(--benefits-recs-icon-background, #EDEDEF);
+  fill: var(--benefits-recs-icon-fill, #003688);
 }
 `;
 
 const openIcon = /* html */ `
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <g clip-path="url(#clip0_1425_1913)">
-    <path d="M13.4696 5.88672V7.35634H16.1149L8.9138 14.5575L9.94253 15.5862L17.1437 8.38507V11.0304H18.6133V5.88672H13.4696ZM17.1437 17.6437H6.85634V7.35634H12V5.88672H6.85634C6.04805 5.88672 5.38672 6.54805 5.38672 7.35634V17.6437C5.38672 18.452 6.04805 19.1133 6.85634 19.1133H17.1437C17.952 19.1133 18.6133 18.452 18.6133 17.6437V12.5H17.1437V17.6437Z" fill="black"/>
-  </g>
-  <defs>
-    <clipPath id="clip0_1425_1913">
-      <rect width="24" height="24" fill="white" transform="translate(0 0.5)"/>
-    </clipPath>
-  </defs>
+<svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+  <path d="M0.918671 8.84999C0.918671 7.58133 0.909338 6.31266 0.922005 5.04399C0.934671 3.48799 1.80934 2.61599 3.35934 2.60933C4.66534 2.60333 5.97467 2.60333 7.28134 2.60933C7.88134 2.61266 8.222 2.87799 8.23734 3.32466C8.25267 3.79333 7.89667 4.08733 7.26867 4.08999C5.96267 4.09599 4.65334 4.08666 3.34667 4.09333C2.6 4.09666 2.384 4.31866 2.384 5.08066C2.38067 7.59933 2.38067 10.1153 2.384 12.634C2.384 13.3653 2.628 13.6027 3.37467 13.6027C5.89334 13.606 8.40934 13.606 10.928 13.6027C11.6687 13.6027 11.8907 13.3747 11.8933 12.6153C11.8967 11.328 11.8933 10.04 11.8967 8.75266C11.9 8.10599 12.156 7.75866 12.6247 7.74933C13.0967 7.73999 13.378 8.09333 13.3807 8.72466C13.3867 10.0713 13.3933 11.4187 13.3773 12.7653C13.362 14.1307 12.4713 15.0527 11.102 15.062C8.46734 15.084 5.83334 15.084 3.19867 15.062C1.81134 15.0493 0.945338 14.162 0.926671 12.7713C0.901338 11.4653 0.917338 10.1587 0.917338 8.84933L0.918671 8.84999Z"/>
+  <path d="M13.0407 1.88733C12.144 1.88733 11.3847 1.89333 10.6253 1.884C10.0347 1.878 9.69066 1.59667 9.72199 1.13067C9.75666 0.583999 10.122 0.421333 10.6093 0.417999C11.994 0.408666 13.3813 0.389999 14.7653 0.389999C15.2687 0.389999 15.5933 0.736666 15.59 1.25533C15.584 2.62067 15.5773 3.99 15.5587 5.35533C15.5527 5.96133 15.2807 6.27733 14.812 6.26467C14.3493 6.252 14.1027 5.93 14.0993 5.32067C14.096 4.56733 14.0993 3.81733 14.0993 2.952C13.868 3.16467 13.7273 3.28933 13.596 3.42067C11.6053 5.408 9.61799 7.39533 7.63066 9.386C7.52132 9.49533 7.41532 9.61133 7.29599 9.714C6.94932 10.0173 6.58332 10.0387 6.25532 9.70133C5.94932 9.386 5.97066 9.036 6.25199 8.70467C6.35199 8.586 6.46732 8.47933 6.57999 8.37C8.56732 6.38267 10.558 4.39533 12.5453 2.40467C12.68 2.27 12.808 2.12933 13.0393 1.886L13.0407 1.88733Z"/>
 </svg>
 `;
 
 const defaultLinkHtml = (link) => /* html */ `
 <li>
-  <a href="${link.url}" target="_blank" rel="noopener noreferrer">
-    <span class="link-start">
-      <span class="link-icon" aria-hidden="true">${link.graphic}</span>
-      <span class="lead">${link.lead}</span>
-    </span>
-    <span class="link-end">
-      <span class="catalyst">${link.catalyst}</span>
-      <span class="open-icon" aria-hidden="true">${openIcon}</span>
-    </span>
+  <span class="link-icon" aria-hidden="true">${link.graphic}</span>
+  <span class="lead">${link.lead}</span>
+  <a class="catalyst" href="${link.url}" target="_blank" rel="noopener noreferrer">
+    ${link.catalyst}<span class="open-icon" aria-hidden="true">${openIcon}</span>
   </a>
 </li>
 `;
@@ -167,7 +142,6 @@ const defaultHtml = (data) => {
       data-language-selection="${data.language.selection}"
     >
       <h2>${data.header}</h2>
-      <p class="tagline">${data.tagline}</p>
       <ul class="link-list">
         ${linkList}
       </ul>
@@ -177,6 +151,7 @@ const defaultHtml = (data) => {
 
 const defaultTemplate = (data) => /* html */ `
   <style>
+    ${defaultCssVars}
     ${defaultCss}
   </style>
   ${defaultHtml(data)}
@@ -184,6 +159,7 @@ const defaultTemplate = (data) => /* html */ `
 
 const eddUiTemplate = (data) => /* html */ `
   <style>
+    ${eddAllCssVars}
     ${defaultCss}
     section {
       margin: 3rem 0;
@@ -192,9 +168,23 @@ const eddUiTemplate = (data) => /* html */ `
   ${defaultHtml(data)}
 `;
 
+const eddSDITemplate = (data) => /* html */ `
+  <style>
+    ${eddAllCssVars}
+    ${defaultCss}
+  </style>
+  ${defaultHtml(data)}
+`;
+
 exports.generateHtml = (data, hostDef) => {
-  if (hostDef?.id === "edd_ui_recert") {
+  const id = hostDef?.id;
+
+  if (id === "edd_ui_recert") {
     return eddUiTemplate(data);
+  }
+
+  if (id === "edd_pfl_submit" || id === "edd_sdi_new") {
+    return eddSDITemplate(data);
   }
 
   return defaultTemplate(data);
