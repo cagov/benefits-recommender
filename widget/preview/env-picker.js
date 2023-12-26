@@ -78,7 +78,7 @@ const defaultMenus = {
       },
       {
         id: "zh-Hant",
-        value: "zh-Hans",
+        value: "zh-Hant",
         text: "Chinese (Traditional)",
       },
     ],
