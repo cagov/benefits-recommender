@@ -83,6 +83,9 @@ exports.handler = arc.http.async(async (req) => {
     links,
   };
 
+  const { links: dataLinks, ...metadata } = data;
+  console.log(metadata);
+
   // If the client wants HTML, send it.
   if (acceptHeader === "text/html") {
     return {

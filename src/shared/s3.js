@@ -103,7 +103,7 @@ const s3 = new S3Client({});
 exports.getDefinitions = async () => {
   const command = new GetObjectCommand({
     Bucket: "cdn.innovation.ca.gov",
-    Key: "br/benefits-recs-defs.json",
+    Key: "br/benefits-recs-defs-redesign-freeze-2023-12-05.json",
   });
 
   return await s3
