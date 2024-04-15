@@ -8,7 +8,7 @@ options /benefits
 post /event
 
 @scheduled
-airtable cron(15 12 * * ? *)
+airtable cron(2 7 * * ? *)
 
 @macros
 arc-macro-cors
