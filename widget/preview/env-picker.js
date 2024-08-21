@@ -17,11 +17,6 @@ const defaultMenus = {
         value: "https://br.api.innovation.ca.gov",
         text: "production",
       },
-      {
-        id: "staging",
-        value: "https://staging.br.api.innovation.ca.gov",
-        text: "staging",
-      },
       ...(isLocal
         ? [
             {
@@ -44,6 +39,23 @@ const defaultMenus = {
         text: "none",
       },
       // Rest of options loaded from API.
+    ],
+  },
+  ruleset: {
+    label: "Rule set:",
+    attribute: "ruleset",
+    defaultValue: "none",
+    options: [
+      {
+        id: "default",
+        value: "none",
+        text: "Default rules",
+      },
+      {
+        id: "showall",
+        value: "show-all",
+        text: "Show all links, no filters",
+      },
     ],
   },
   language: {
