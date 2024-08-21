@@ -42,6 +42,7 @@ exports.handler = arc.http.async(async (req) => {
   // Grab data from headers and URL query parameters.
   const hostQuery = decodeURIComponent(req.query.host || "");
   const langQuery = req.query.language || "en";
+  const rulesetQuery = req.query.ruleset || "";
   const acceptHeader = req.headers?.accept;
 
   // Unless it's Chinese, strip the language code down to two characters.
@@ -54,10 +55,11 @@ exports.handler = arc.http.async(async (req) => {
   const hostDef = matchHostDef(hostQuery, hostDefs);
   const throttles = await getThrottles(throttleDefs);
   const snippets = assembleSnippets(snippetDefs, language, hostDef);
+  const ruleset = rulesetQuery.length > 0 ? rulesetQuery : null;
 
   // Create target links.
   const allLinks = assembleLinks(targetDefs, language, hostDef);
-  const links = await applyRules(throttles, allLinks, hostDef);
+  const links = await applyRules(throttles, allLinks, hostDef, ruleset);
 
   // If we don't have any links, exit now with no content.
   if (links.length === 0) {

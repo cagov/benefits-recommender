@@ -20,6 +20,8 @@ const url = require("./url");
  * The host partner from which the widget sent this request.
  * @param {import('./s3.js').Throttle[]} [params.throttles]
  * A processed list of target link throttles.
+ * @param {string|null} [params.ruleset]
+ * The custom rule set from the request.
  * @returns {import('./links.js').TargetLink[]}
  */
 
@@ -79,14 +81,22 @@ const rules = [
  * A processed list of all target links in the user's requested language.
  * @param {import('./s3.js').Host} hostDef
  * The identified host partner from which the widget sent this request.
+ * @param {string|null} ruleset
+ * The custom rule set from the request.
  * @returns {Promise<import('./links.js').TargetLink[]>}
  * A targetted list of target links.
  */
-const applyRules = async (throttles, allLinks, hostDef) => {
+const applyRules = async (throttles, allLinks, hostDef, ruleset) => {
   const params = {
     hostDef,
     throttles,
+    ruleset,
   };
+
+  // The show-all "rule set" is useful for previewing.
+  if (ruleset == "show-all") {
+    return allLinks;
+  }
 
   return rules.reduce((links, rule) => {
     const newLinks = rule(links, params);
