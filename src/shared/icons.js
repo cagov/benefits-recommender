@@ -403,4 +403,4 @@ exports.heartInHand = /* html */ `
 </clipPath>
 </defs>
 </svg>
-`
+`;
