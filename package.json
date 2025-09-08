@@ -11,23 +11,23 @@
     "deploy": "npx arc deploy --name test"
   },
   "devDependencies": {
-    "@architect/architect": "^10.14.2",
-    "tape": "^5.5.3"
+    "@architect/architect": "^11.3.0",
+    "tape": "^5.9.0"
   },
   "main": "index.js",
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@architect/functions": "^7.0.0",
-    "@aws-sdk/client-cloudfront": "^3.418.0",
-    "@aws-sdk/client-s3": "^3.418.0",
+    "@architect/functions": "^8.1.9",
+    "@aws-sdk/client-cloudfront": "^3.883.0",
+    "@aws-sdk/client-s3": "^3.883.0",
     "arc-macro-cors": "^2.0.0"
   },
   "workspaces": [
     "widget"
   ],
   "volta": {
-    "node": "18.17.0"
+    "node": "22.19.0"
   }
 }
