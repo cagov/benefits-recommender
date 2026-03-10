@@ -10,7 +10,7 @@ The frontend widget records user activity events like: widget render, clicks on 
 
 This widget will be placed on different sites which aren't currently using google analytics or don't have the state GA tag available so we don't have a client side way to report to GA. It isn't desirable to embed a GA tag inside the widget because of client side weight. We can explore reporting events to the GA API though.
 
-<img src="benefits_recommend_API.png">
+<img src="img/benefits_recommend_API.png">
 
 ## Test
 
