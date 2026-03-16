@@ -59,8 +59,6 @@ When omitted, `language` will default to the `lang` attribute of the `<html>` el
 <script type="module" async defer src="https://cdn.innovation.ca.gov/br/cagov-benefits-recs.js"></script>
 ```
 
-> Note: the widget's content is not yet translated to other languages. Until then, this parameter will have no effect. Stay tuned! Translations are coming soon.
-
 ### Endpoint
 
 The optional `endpoint` parameter tells the widget which API to contact for links.
@@ -94,3 +92,5 @@ npm run serve
 ```
 
 Then view the <a href="http://localhost:8080/preview/local.html">local test page URL</a>.
+
+See ODI's Engineering Coda for more developer notes. 
