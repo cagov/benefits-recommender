@@ -1,7 +1,15 @@
 const html = (strings) => {
-  const content = strings[0];
-  const trimmed = content.replace(/<!--(.*?)-->|\s\B/gm, "").trim();
-  return trimmed;
+  let content = strings[0];
+  // Strip HTML comments — including ones that span multiple lines — repeating
+  // until the string stops changing so a partial "<!--" can't survive a single
+  // pass. ([\s\S] is used instead of "." so newlines inside comments match.)
+  let prev;
+  do {
+    prev = content;
+    content = content.replace(/<!--[\s\S]*?-->/g, "");
+  } while (content !== prev);
+  // Collapse insignificant whitespace, then trim.
+  return content.replace(/\s\B/g, "").trim();
 };
 
 exports.wiFi = html`
