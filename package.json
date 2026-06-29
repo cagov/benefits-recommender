@@ -27,6 +27,16 @@
   "workspaces": [
     "widget"
   ],
+  "overrides": {
+    "tmp": "^0.2.6",
+    "ws": "^8.21.0",
+    "fast-xml-parser": "^5.7.0",
+    "fast-xml-builder": "^1.1.7",
+    "follow-redirects": "^1.16.0",
+    "qs": "^6.15.2",
+    "brace-expansion": "^1.1.13",
+    "path-to-regexp": "^8.4.2"
+  },
   "volta": {
     "node": "22.19.0"
   }
